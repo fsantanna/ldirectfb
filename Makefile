@@ -1,5 +1,5 @@
 all:
-	gcc -I /usr/local/include/directfb -O2 -fpic -c directfb.c
+	gcc -I /usr/local/include/directfb -O2 -fpic -c ldirectfb.c
 	gcc -I /usr/local/include/directfb -O2 -fpic -c IDirectFB.c
 	gcc -I /usr/local/include/directfb -O2 -fpic -c IDirectFBDisplayLayer.c
 	gcc -I /usr/local/include/directfb -O2 -fpic -c IDirectFBSurface.c
@@ -8,7 +8,7 @@ all:
 	gcc -I /usr/local/include/directfb -O2 -fpic -c IDirectFBVideoProvider.c
 	gcc -I /usr/local/include/directfb -O2 -fpic -c IDirectFBFont.c
 	gcc -I /usr/local/include/directfb -O2 -fpic -c IDirectFBEventBuffer.c
-	gcc -O -shared -fpic -o directfb.so directfb.o -ldirectfb \
+	gcc -O -shared -fpic -o ldirectfb.so ldirectfb.o -ldirectfb \
 		IDirectFB.o \
 	   	IDirectFBDisplayLayer.o \
 	   	IDirectFBSurface.o \

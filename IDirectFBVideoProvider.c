@@ -1,5 +1,5 @@
 #include <unistd.h>
-#include "directfb.h"
+#include "ldirectfb.h"
 
 #include <lauxlib.h>
 
@@ -14,7 +14,7 @@ int l_IDirectFBVideoProvider_toudata (lua_State* L)
 
 	IDirectFBVideoProvider** _vid = (IDirectFBVideoProvider**) lua_newuserdata(L, sizeof(IDirectFBVideoProvider*));
 	*_vid = vid;              // [ ... | _vid ]
-	luaL_getmetatable(L, "directfb.IDirectFBVideoProvider");
+	luaL_getmetatable(L, "ldirectfb.IDirectFBVideoProvider");
                               // [ ... | _vid | mt ]
 	lua_setmetatable(L, -2);  // [ ... | _vid ]
 	return 1;
@@ -23,7 +23,7 @@ int l_IDirectFBVideoProvider_toudata (lua_State* L)
 static int l_new (lua_State* L)
 {
 	// [ IDFBVideoProvider | dfb | filename ]
-	IDirectFB* dfb = * (IDirectFB**) luaL_checkudata(L, 2, "directfb.IDirectFB");
+	IDirectFB* dfb = * (IDirectFB**) luaL_checkudata(L, 2, "ldirectfb.IDirectFB");
 	IDirectFBVideoProvider* vid;
 	DFBCHECK( dfb->CreateVideoProvider(dfb, luaL_checkstring(L, 3), &vid) );
 	lua_pushlightuserdata(L, vid);        // [ IDFBVideoProvider | dfb | vid* ]
@@ -34,7 +34,7 @@ static int l_new (lua_State* L)
 static int l_gc (lua_State* L)
 {
 	// [ vid ]
-	IDirectFBVideoProvider* vid = * (IDirectFBVideoProvider**) luaL_checkudata(L, 1, "directfb.IDirectFBVideoProvider");
+	IDirectFBVideoProvider* vid = * (IDirectFBVideoProvider**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBVideoProvider");
 	lua_pushnil(L);                                // [ vid | nil ]
 	lua_rawseti(L, LUA_REGISTRYINDEX, (int)vid);   // [ vid ]
 	vid->Release(vid);
@@ -71,8 +71,8 @@ void callback (void* data)
 static int l_PlayTo (lua_State* L)
 {
 	// [ vid | sfc | trect | callback ]
-	IDirectFBVideoProvider* vid = * (IDirectFBVideoProvider**) luaL_checkudata(L, 1, "directfb.IDirectFBVideoProvider");
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 2, "directfb.IDirectFBSurface");
+	IDirectFBVideoProvider* vid = * (IDirectFBVideoProvider**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBVideoProvider");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 2, "ldirectfb.IDirectFBSurface");
 
 	/*
 	struct s_cb* cb = (struct s_cb*) malloc(sizeof(struct s_cb));
@@ -91,7 +91,7 @@ static int l_PlayTo (lua_State* L)
 static int l_Stop (lua_State* L)
 {
 	// [ vid ]
-	IDirectFBVideoProvider* vid = * (IDirectFBVideoProvider**) luaL_checkudata(L, 1, "directfb.IDirectFBVideoProvider");
+	IDirectFBVideoProvider* vid = * (IDirectFBVideoProvider**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBVideoProvider");
 	DFBCHECK( vid->Stop(vid) )
 	return 0;
 }
@@ -99,7 +99,7 @@ static int l_Stop (lua_State* L)
 static int l_GetSurfaceDescription (lua_State* L)
 {
 	// [ vid ]
-	IDirectFBVideoProvider* vid = * (IDirectFBVideoProvider**) luaL_checkudata(L, 1, "directfb.IDirectFBVideoProvider");
+	IDirectFBVideoProvider* vid = * (IDirectFBVideoProvider**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBVideoProvider");
 	DFBSurfaceDescription dsc;
 	DFBCHECK (vid->GetSurfaceDescription(vid, &dsc));
 	DFBSurfaceDescription2table(L, &dsc);  // [ vid | t_dsc ]
@@ -109,7 +109,7 @@ static int l_GetSurfaceDescription (lua_State* L)
 static int l_GetPos (lua_State* L)
 {
 	// [ vid ]
-	IDirectFBVideoProvider* vid = * (IDirectFBVideoProvider**) luaL_checkudata(L, 1, "directfb.IDirectFBVideoProvider");
+	IDirectFBVideoProvider* vid = * (IDirectFBVideoProvider**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBVideoProvider");
 	double ret;
 	DFBCHECK( vid->GetPos(vid, &ret) );
 	lua_pushnumber(L, ret);   // [ vid | ret ]
@@ -119,7 +119,7 @@ static int l_GetPos (lua_State* L)
 static int l_GetLength (lua_State* L)
 {
 	// [ vid ]
-	IDirectFBVideoProvider* vid = * (IDirectFBVideoProvider**) luaL_checkudata(L, 1, "directfb.IDirectFBVideoProvider");
+	IDirectFBVideoProvider* vid = * (IDirectFBVideoProvider**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBVideoProvider");
 	double ret;
 	DFBCHECK( vid->GetLength(vid, &ret) );
 	lua_pushnumber(L, ret);   // [ vid | ret ]
@@ -129,7 +129,7 @@ static int l_GetLength (lua_State* L)
 static int l_GetStatus (lua_State* L)
 {
 	// [ vid ]
-	IDirectFBVideoProvider* vid = * (IDirectFBVideoProvider**) luaL_checkudata(L, 1, "directfb.IDirectFBVideoProvider");
+	IDirectFBVideoProvider* vid = * (IDirectFBVideoProvider**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBVideoProvider");
  	DFBVideoProviderStatus ret;
 	DFBCHECK( vid->GetStatus(vid, &ret) );
 	lua_pushnumber(L, ret);   // [ vid | ret ]
@@ -151,7 +151,7 @@ static const struct luaL_Reg funcs[] = {
 	{ NULL, NULL }
 };
 
-LUALIB_API int luaopen_directfb_IDirectFBVideoProvider (lua_State* L) {
+LUALIB_API int luaopen_ldirectfb_IDirectFBVideoProvider (lua_State* L) {
 	luaopen_module(L, meths, funcs, l_new);
 	return 1;
 }

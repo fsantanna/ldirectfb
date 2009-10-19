@@ -1,4 +1,4 @@
-#include "directfb.h"
+#include "ldirectfb.h"
 
 // funcao STATIC (tb pode ser chamada internamente, por isso o [ ... ]
 int l_IDirectFBImageProvider_toudata (lua_State* L)
@@ -11,7 +11,7 @@ int l_IDirectFBImageProvider_toudata (lua_State* L)
 
 	IDirectFBImageProvider** _img = (IDirectFBImageProvider**) lua_newuserdata(L, sizeof(IDirectFBSurface*));
 	*_img = img;              // [ ... | _img ]
-	luaL_getmetatable(L, "directfb.IDirectFBImageProvider");
+	luaL_getmetatable(L, "ldirectfb.IDirectFBImageProvider");
                               // [ ... | _img | mt ]
 	lua_setmetatable(L, -2);  // [ ... | _img ]
 	return 1;
@@ -20,11 +20,11 @@ int l_IDirectFBImageProvider_toudata (lua_State* L)
 static int l_new (lua_State* L)
 {
 	// [ IDFBImageProvider | dfb | path ]
-	IDirectFB* dfb = * (IDirectFB**) luaL_checkudata(L, 2, "directfb.IDirectFB");
+	IDirectFB* dfb = * (IDirectFB**) luaL_checkudata(L, 2, "ldirectfb.IDirectFB");
 	const char* path = luaL_checkstring(L, 3);
 	IDirectFBImageProvider** img = (IDirectFBImageProvider**) lua_newuserdata(L, sizeof(IDirectFBImageProvider*));
                                   // [ IDFBImageProvider | dfb | path | img ]
-	luaL_getmetatable(L, "directfb.IDirectFBImageProvider");
+	luaL_getmetatable(L, "ldirectfb.IDirectFBImageProvider");
                                   // [ IDFBImageProvider | dfb | path | img | mt ]
 	lua_setmetatable(L, -2);      // [ IDFBImageProvider | dfb | path | img ]
 	DFBCHECK (dfb->CreateImageProvider (dfb, path, img));
@@ -33,7 +33,7 @@ static int l_new (lua_State* L)
 
 static int l_gc (lua_State* L)
 {
-	IDirectFBImageProvider* img = * (IDirectFBImageProvider**) luaL_checkudata(L, 1, "directfb.IDirectFBImageProvider");
+	IDirectFBImageProvider* img = * (IDirectFBImageProvider**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBImageProvider");
 	img->Release(img);
 	return 0;
 }
@@ -41,7 +41,7 @@ static int l_gc (lua_State* L)
 static int l_GetSurfaceDescription (lua_State* L)
 {
 	// [ img ]
-	IDirectFBImageProvider* img = * (IDirectFBImageProvider**) luaL_checkudata(L, 1, "directfb.IDirectFBImageProvider");
+	IDirectFBImageProvider* img = * (IDirectFBImageProvider**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBImageProvider");
 	DFBSurfaceDescription dsc;
 	DFBCHECK (img->GetSurfaceDescription(img, &dsc));
 	DFBSurfaceDescription2table(L, &dsc);  // [ img | t_dsc ]
@@ -51,8 +51,8 @@ static int l_GetSurfaceDescription (lua_State* L)
 static int l_RenderTo (lua_State* L)
 {
 	// [ img | sfc | x | y | dx | dy ]
-	IDirectFBImageProvider* img = * (IDirectFBImageProvider**) luaL_checkudata(L, 1, "directfb.IDirectFBImageProvider");
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 2, "directfb.IDirectFBSurface");
+	IDirectFBImageProvider* img = * (IDirectFBImageProvider**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBImageProvider");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 2, "ldirectfb.IDirectFBSurface");
 	DFBRectangle* rect = NULL;
 	DFBRectangle r;
 	if (!lua_isnil(L, 3)) {
@@ -77,7 +77,7 @@ static const struct luaL_Reg funcs[] = {
 	{ NULL, NULL }
 };
 
-LUALIB_API int luaopen_directfb_IDirectFBImageProvider (lua_State* L) {
+LUALIB_API int luaopen_ldirectfb_IDirectFBImageProvider (lua_State* L) {
 	luaopen_module(L, meths, funcs, l_new);
 	return 1;
 }

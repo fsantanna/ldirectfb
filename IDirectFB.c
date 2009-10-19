@@ -1,9 +1,9 @@
-#include "directfb.h"
+#include "ldirectfb.h"
 
 static int l_new (lua_State* L)
 {
 	IDirectFB** dfb = (IDirectFB**) lua_newuserdata(L, sizeof(IDirectFB*));
-	luaL_getmetatable(L, "directfb.IDirectFB");
+	luaL_getmetatable(L, "ldirectfb.IDirectFB");
 	lua_setmetatable(L, -2);
 	DFBCHECK (DirectFBCreate (dfb));
 	return 1;
@@ -11,51 +11,51 @@ static int l_new (lua_State* L)
 
 static int l_gc (lua_State* L)
 {
-	IDirectFB* dfb = * (IDirectFB**) luaL_checkudata(L, 1, "directfb.IDirectFB");
+	IDirectFB* dfb = * (IDirectFB**) luaL_checkudata(L, 1, "ldirectfb.IDirectFB");
 	dfb->Release(dfb);
 	return 0;
 }
 
 static int l_SetCooperativeLevel (lua_State* L)
 {
-	IDirectFB* dfb = * (IDirectFB**) luaL_checkudata(L, 1, "directfb.IDirectFB");
+	IDirectFB* dfb = * (IDirectFB**) luaL_checkudata(L, 1, "ldirectfb.IDirectFB");
 	DFBCHECK (dfb->SetCooperativeLevel(dfb, (DFBCooperativeLevel)luaL_checknumber(L, 2)) );
 	return 0;
 }
 
-LUALIB_API int luaopen_directfb_IDirectFBDisplayLayer (lua_State* L);
+LUALIB_API int luaopen_ldirectfb_IDirectFBDisplayLayer (lua_State* L);
 static int l_GetDisplayLayer (lua_State* L) {
-	CreateInstance(L, "directfb.IDirectFBDisplayLayer");
+	CreateInstance(L, "ldirectfb.IDirectFBDisplayLayer");
 	return 1;
 }
 
-LUALIB_API int luaopen_directfb_IDirectFBSurface (lua_State* L);
+LUALIB_API int luaopen_ldirectfb_IDirectFBSurface (lua_State* L);
 static int l_CreateSurface (lua_State* L) {
-	CreateInstance(L, "directfb.IDirectFBSurface");
+	CreateInstance(L, "ldirectfb.IDirectFBSurface");
 	return 1;
 }
 
-LUALIB_API int luaopen_directfb_IDirectFBImageProvider (lua_State* L);
+LUALIB_API int luaopen_ldirectfb_IDirectFBImageProvider (lua_State* L);
 static int l_CreateImageProvider (lua_State* L) {
-	CreateInstance(L, "directfb.IDirectFBImageProvider");
+	CreateInstance(L, "ldirectfb.IDirectFBImageProvider");
 	return 1;
 }
 
-LUALIB_API int luaopen_directfb_IDirectFBVideoProvider (lua_State* L);
+LUALIB_API int luaopen_ldirectfb_IDirectFBVideoProvider (lua_State* L);
 static int l_CreateVideoProvider (lua_State* L) {
-	CreateInstance(L, "directfb.IDirectFBVideoProvider");
+	CreateInstance(L, "ldirectfb.IDirectFBVideoProvider");
 	return 1;
 }
 
-LUALIB_API int luaopen_directfb_IDirectFBFont (lua_State* L);
+LUALIB_API int luaopen_ldirectfb_IDirectFBFont (lua_State* L);
 static int l_CreateFont (lua_State* L) {
-	CreateInstance(L, "directfb.IDirectFBFont");
+	CreateInstance(L, "ldirectfb.IDirectFBFont");
 	return 1;
 }
 
-LUALIB_API int luaopen_directfb_IDirectFBEventBuffer (lua_State* L);
+LUALIB_API int luaopen_ldirectfb_IDirectFBEventBuffer (lua_State* L);
 static int l_CreateInputEventBuffer (lua_State* L) {
-	CreateInstance(L, "directfb.IDirectFBEventBuffer");
+	CreateInstance(L, "ldirectfb.IDirectFBEventBuffer");
 	return 1;
 }
 
@@ -76,7 +76,7 @@ static const struct luaL_Reg funcs[] = {
 	{ NULL, NULL }
 };
 
-LUALIB_API int luaopen_directfb_IDirectFB (lua_State* L) {
+LUALIB_API int luaopen_ldirectfb_IDirectFB (lua_State* L) {
 	luaopen_module(L, meths, funcs, l_new);
 	return 1;
 }

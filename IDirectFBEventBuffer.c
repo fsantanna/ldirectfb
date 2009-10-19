@@ -1,4 +1,4 @@
-#include "directfb.h"
+#include "ldirectfb.h"
 
 // funcao STATIC (tb pode ser chamada internamente, por isso o [ ... ]
 int l_IDirectFBEventBuffer_toudata (lua_State* L)
@@ -11,7 +11,7 @@ int l_IDirectFBEventBuffer_toudata (lua_State* L)
 
 	IDirectFBEventBuffer** _evtbuf = (IDirectFBEventBuffer**) lua_newuserdata(L, sizeof(IDirectFBEventBuffer*));
 	*_evtbuf = evtbuf;        // [ ... | _evtbuf ]
-	luaL_getmetatable(L, "directfb.IDirectFBEventBuffer");
+	luaL_getmetatable(L, "ldirectfb.IDirectFBEventBuffer");
                               // [ ... | _evtbuf | mt ]
 	lua_setmetatable(L, -2);  // [ ... | _evtbuf ]
 	return 1;
@@ -20,7 +20,7 @@ int l_IDirectFBEventBuffer_toudata (lua_State* L)
 static int l_new (lua_State* L)
 {
 	// [ IDFBEventBuffer | dfb | caps | global ]
-	IDirectFB* dfb = * (IDirectFB**) luaL_checkudata(L, 2, "directfb.IDirectFB");
+	IDirectFB* dfb = * (IDirectFB**) luaL_checkudata(L, 2, "ldirectfb.IDirectFB");
 	int caps = luaL_checknumber(L, 3);
 	int global = lua_toboolean(L, 4);
 	IDirectFBEventBuffer* evtbuf;
@@ -32,7 +32,7 @@ static int l_new (lua_State* L)
 
 static int l_gc (lua_State* L)
 {
-	IDirectFBEventBuffer* evtbuf = * (IDirectFBEventBuffer**) luaL_checkudata(L, 1, "directfb.IDirectFBEventBuffer");
+	IDirectFBEventBuffer* evtbuf = * (IDirectFBEventBuffer**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBEventBuffer");
 	evtbuf->Release(evtbuf);
 	return 0;
 }
@@ -40,7 +40,7 @@ static int l_gc (lua_State* L)
 static int l_WaitForEvent (lua_State* L)
 {
 	// [ evtbuf ]
-	IDirectFBEventBuffer* evtbuf = * (IDirectFBEventBuffer**) luaL_checkudata(L, 1, "directfb.IDirectFBEventBuffer");
+	IDirectFBEventBuffer* evtbuf = * (IDirectFBEventBuffer**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBEventBuffer");
 	evtbuf->WaitForEvent(evtbuf);
 	return 0;
 }
@@ -48,14 +48,14 @@ static int l_WaitForEvent (lua_State* L)
 static int l_WaitForEventWithTimeout (lua_State* L)
 {
 	// [ evtbuf | s | ms ]
-	IDirectFBEventBuffer* evtbuf = * (IDirectFBEventBuffer**) luaL_checkudata(L, 1, "directfb.IDirectFBEventBuffer");
+	IDirectFBEventBuffer* evtbuf = * (IDirectFBEventBuffer**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBEventBuffer");
 	evtbuf->WaitForEventWithTimeout(evtbuf, luaL_checknumber(L,2), luaL_checknumber(L,3));
 	return 0;
 }
 
 static int l_GetEvent (lua_State* L)
 {
-	IDirectFBEventBuffer* evtbuf = * (IDirectFBEventBuffer**) luaL_checkudata(L, 1, "directfb.IDirectFBEventBuffer");
+	IDirectFBEventBuffer* evtbuf = * (IDirectFBEventBuffer**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBEventBuffer");
 	DFBEvent evt;
 	evtbuf->GetEvent(evtbuf, (DFBEvent*)&evt);
 	switch (evt.clazz) {
@@ -73,7 +73,7 @@ static int l_GetEvent (lua_State* L)
 static int l_HasEvent (lua_State* L)
 {
 	// [ evtbuf ]
-	IDirectFBEventBuffer* evtbuf = * (IDirectFBEventBuffer**) luaL_checkudata(L, 1, "directfb.IDirectFBEventBuffer");
+	IDirectFBEventBuffer* evtbuf = * (IDirectFBEventBuffer**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBEventBuffer");
 	lua_pushboolean(L, evtbuf->HasEvent(evtbuf) == DFB_OK );   // [ evtbuf | has? ]
 	return 1;
 }
@@ -81,7 +81,7 @@ static int l_HasEvent (lua_State* L)
 static int l_Reset (lua_State* L)
 {
 	// [ evtbuf ]
-	IDirectFBEventBuffer* evtbuf = * (IDirectFBEventBuffer**) luaL_checkudata(L, 1, "directfb.IDirectFBEventBuffer");
+	IDirectFBEventBuffer* evtbuf = * (IDirectFBEventBuffer**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBEventBuffer");
 	evtbuf->Reset(evtbuf);
 	return 0;
 }
@@ -89,7 +89,7 @@ static int l_Reset (lua_State* L)
 static int l_PostEvent (lua_State* L)
 {
 	// [ evtbuf | evt ]
-	IDirectFBEventBuffer* evtbuf = * (IDirectFBEventBuffer**) luaL_checkudata(L, 1, "directfb.IDirectFBEventBuffer");
+	IDirectFBEventBuffer* evtbuf = * (IDirectFBEventBuffer**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBEventBuffer");
 	DFBUserEvent evt;
 	table2DFBUserEvent(L, &evt);
 	evtbuf->PostEvent(evtbuf, (DFBEvent*)&evt);
@@ -111,7 +111,7 @@ static const struct luaL_Reg funcs[] = {
 	{ NULL, NULL }
 };
 
-LUALIB_API int luaopen_directfb_IDirectFBEventBuffer (lua_State* L) {
+LUALIB_API int luaopen_ldirectfb_IDirectFBEventBuffer (lua_State* L) {
 	luaopen_module(L, meths, funcs, l_new);
 	return 1;
 }

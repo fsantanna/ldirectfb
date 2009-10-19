@@ -1,5 +1,5 @@
 #include <unistd.h>
-#include "directfb.h"
+#include "ldirectfb.h"
 
 #include <lauxlib.h>
 
@@ -14,7 +14,7 @@ int l_IDirectFBWindow_toudata (lua_State* L)
 
 	IDirectFBWindow** _win = (IDirectFBWindow**) lua_newuserdata(L, sizeof(IDirectFBWindow*));
 	*_win = win;              // [ ... | _win ]
-	luaL_getmetatable(L, "directfb.IDirectFBWindow");
+	luaL_getmetatable(L, "ldirectfb.IDirectFBWindow");
                               // [ ... | _win | mt ]
 	lua_setmetatable(L, -2);  // [ ... | _win ]
 	return 1;
@@ -23,7 +23,7 @@ int l_IDirectFBWindow_toudata (lua_State* L)
 static int l_new (lua_State* L)
 {
 	// [ IDFBWindow | layer | dsc ]
-	IDirectFBDisplayLayer* layer = * (IDirectFBDisplayLayer**) luaL_checkudata(L, 2, "directfb.IDirectFBDisplayLayer");
+	IDirectFBDisplayLayer* layer = * (IDirectFBDisplayLayer**) luaL_checkudata(L, 2, "ldirectfb.IDirectFBDisplayLayer");
 	DFBWindowDescription dsc;
 	table2DFBWindowDescription (L, &dsc);
 	IDirectFBWindow* win;
@@ -37,7 +37,7 @@ static int l_new (lua_State* L)
 static int l_gc (lua_State* L)
 {
 	// TEMP existe esse Release?
-	IDirectFBWindow* win = * (IDirectFBWindow**) luaL_checkudata(L, 1, "directfb.IDirectFBWindow");
+	IDirectFBWindow* win = * (IDirectFBWindow**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBWindow");
 	win->Release(win);
 	return 0;
 }
@@ -45,9 +45,9 @@ static int l_gc (lua_State* L)
 static int l_GetSurface (lua_State* L)
 {
 	// [ win ]
-	IDirectFBWindow* win = * (IDirectFBWindow**) luaL_checkudata(L, 1, "directfb.IDirectFBWindow");
+	IDirectFBWindow* win = * (IDirectFBWindow**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBWindow");
 	IDirectFBSurface** sfc = (IDirectFBSurface**) lua_newuserdata(L, sizeof(IDirectFBSurface*));
-	luaL_getmetatable(L, "directfb.IDirectFBSurface");
+	luaL_getmetatable(L, "ldirectfb.IDirectFBSurface");
                                   // [ win | sfc | mt ]
 	lua_setmetatable(L, -2);      // [ win | sfc ]
 	DFBCHECK (win->GetSurface(win, sfc));
@@ -57,7 +57,7 @@ static int l_GetSurface (lua_State* L)
 static int l_SetOpacity (lua_State* L)
 {
 	// [ win | opacity ]
-	IDirectFBWindow* win = * (IDirectFBWindow**) luaL_checkudata(L, 1, "directfb.IDirectFBWindow");
+	IDirectFBWindow* win = * (IDirectFBWindow**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBWindow");
 	win->SetOpacity(win, luaL_checknumber(L, 2));
 	return 0;
 }
@@ -74,11 +74,11 @@ static const struct luaL_Reg funcs[] = {
 	{ NULL, NULL }
 };
 
-LUALIB_API int luaopen_directfb_IDirectFBWindow (lua_State* L) {
+LUALIB_API int luaopen_ldirectfb_IDirectFBWindow (lua_State* L) {
 	// depende de "IDirectFBDisplayLayer"
 	// [ ... ]
 	lua_getglobal(L, "require");                    // [ ... | require ]
-	lua_pushstring(L, "directfb.IDirectFBDisplayLayer"); // [ ... | require | "IDFBDisplayLayer" ]
+	lua_pushstring(L, "ldirectfb.IDirectFBDisplayLayer"); // [ ... | require | "IDFBDisplayLayer" ]
 	lua_call(L, 1, 1);                              // [ ... | _M ]
 	lua_pop(L,1);                                   // [ ... ]
 

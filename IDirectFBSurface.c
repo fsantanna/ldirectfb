@@ -1,5 +1,5 @@
 #include <unistd.h>
-#include "directfb.h"
+#include "ldirectfb.h"
 
 #include <lauxlib.h>
 
@@ -14,7 +14,7 @@ int l_IDirectFBSurface_toudata (lua_State* L)
 
 	IDirectFBSurface** _sfc = (IDirectFBSurface**) lua_newuserdata(L, sizeof(IDirectFBSurface*));
 	*_sfc = sfc;              // [ ... | _sfc ]
-	luaL_getmetatable(L, "directfb.IDirectFBSurface");
+	luaL_getmetatable(L, "ldirectfb.IDirectFBSurface");
                               // [ ... | _sfc | mt ]
 	lua_setmetatable(L, -2);  // [ ... | _sfc ]
 	return 1;
@@ -23,7 +23,7 @@ int l_IDirectFBSurface_toudata (lua_State* L)
 static int l_new (lua_State* L)
 {
 	// [ IDFBSurface | dfb | dsc ]
-	IDirectFB* dfb = * (IDirectFB**) luaL_checkudata(L, 2, "directfb.IDirectFB");
+	IDirectFB* dfb = * (IDirectFB**) luaL_checkudata(L, 2, "ldirectfb.IDirectFB");
 	DFBSurfaceDescription dsc;
 	table2DFBSurfaceDescription (L, &dsc);
 	IDirectFBSurface* sfc;
@@ -39,7 +39,7 @@ static int l_new (lua_State* L)
 
 static int l_gc (lua_State* L)
 {
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "directfb.IDirectFBSurface");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBSurface");
 	sfc->Release(sfc);
 	return 0;
 }
@@ -49,7 +49,7 @@ static int l_GetSize (lua_State* L)
 {
 	// [ sfc ]
 	int width, height;
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "directfb.IDirectFBSurface");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBSurface");
 	DFBCHECK (sfc->GetSize (sfc, &width, &height));
 	lua_pushnumber(L, width);   // [ sfc | width ]
 	lua_pushnumber(L, height);  // [ sfc | width | height ]
@@ -60,7 +60,7 @@ static int l_SetColor (lua_State* L)
 {
 	// [ sfc | r | g | b | a ]
 	DFBColor color;
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "directfb.IDirectFBSurface");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBSurface");
 	DFBCHECK( sfc->SetColor(sfc,
 	                        luaL_checkint(L, 2),       // r
 							luaL_checkint(L, 3),       // g
@@ -72,8 +72,8 @@ static int l_SetColor (lua_State* L)
 static int l_SetFont (lua_State* L)
 {
 	// [ sfc | font ]
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "directfb.IDirectFBSurface");
-	IDirectFBFont* font = * (IDirectFBFont**) luaL_checkudata(L, 2, "directfb.IDirectFBFont");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBSurface");
+	IDirectFBFont* font = * (IDirectFBFont**) luaL_checkudata(L, 2, "ldirectfb.IDirectFBFont");
 	DFBCHECK (sfc->SetFont(sfc, font));
 	return 0;
 }
@@ -81,7 +81,7 @@ static int l_SetFont (lua_State* L)
 static int l_FillRectangle (lua_State* L)
 {
 	// [ sfc | x | y | w | h ]
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "directfb.IDirectFBSurface");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBSurface");
 	DFBCHECK (sfc->FillRectangle(sfc, luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_checknumber(L, 5)));
 	return 0;
 }
@@ -89,7 +89,7 @@ static int l_FillRectangle (lua_State* L)
 static int l_DrawRectangle (lua_State* L)
 {
 	// [ sfc | x | y | w | h ]
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "directfb.IDirectFBSurface");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBSurface");
 	DFBCHECK (sfc->DrawRectangle(sfc, luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_checknumber(L, 5)));
 	return 0;
 }
@@ -97,7 +97,7 @@ static int l_DrawRectangle (lua_State* L)
 static int l_DrawLine (lua_State* L)
 {
 	// [ sfc | x1 | y1 | x2 | y2 ]
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "directfb.IDirectFBSurface");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBSurface");
 	DFBCHECK( sfc->DrawLine(sfc, luaL_checknumber(L, 2),
 	                             luaL_checknumber(L, 3),
 	                             luaL_checknumber(L, 4),
@@ -108,7 +108,7 @@ static int l_DrawLine (lua_State* L)
 static int l_DrawString (lua_State* L)
 {
 	// [ sfc | string | x | y | flags ]
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "directfb.IDirectFBSurface");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBSurface");
 	size_t len;
 	const char* str = luaL_checklstring(L, 2, &len);
 	DFBCHECK (sfc->DrawString(sfc, str, len, luaL_checknumber(L,3), luaL_checknumber(L,4), (DFBSurfaceTextFlags)luaL_checknumber(L,5)));
@@ -119,7 +119,7 @@ static int l_DrawString (lua_State* L)
 static int l_SetClip (lua_State* L)
 {
 	// [ sfc | t_region ]
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "directfb.IDirectFBSurface");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBSurface");
 	DFBRegion region;
 	table2DFBRegion(L, &region);
 	DFBCHECK (sfc->SetClip(sfc, &region));
@@ -130,7 +130,7 @@ static int l_SetClip (lua_State* L)
 static int l_SetBlittingFlags (lua_State* L)
 {
 	// [ sfc | flags ]
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "directfb.IDirectFBSurface");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBSurface");
 	DFBCHECK( sfc->SetBlittingFlags(sfc, luaL_checknumber(L, 2)) );
 	return 0;
 }
@@ -138,8 +138,8 @@ static int l_SetBlittingFlags (lua_State* L)
 static int l_Blit (lua_State* L)
 {
 	// [ sfc | src | rect | x | y ]
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "directfb.IDirectFBSurface");
-	IDirectFBSurface* src = * (IDirectFBSurface**) luaL_checkudata(L, 2, "directfb.IDirectFBSurface");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBSurface");
+	IDirectFBSurface* src = * (IDirectFBSurface**) luaL_checkudata(L, 2, "ldirectfb.IDirectFBSurface");
 	int x = luaL_checknumber(L, 4);
 	int y = luaL_checknumber(L, 5);
 	DFBRectangle rect, *r = NULL;
@@ -157,7 +157,7 @@ static int l_Flip (lua_State* L)
 {
 	// TEMP: NULL,0?
 	// [ sfc ]
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "directfb.IDirectFBSurface");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBSurface");
 	DFBCHECK (sfc->Flip (sfc, NULL, DSFLIP_WAITFORSYNC));
 	//DFBCHECK (sfc->Flip (sfc, NULL, 0));
 	//DFBCHECK (sfc->Flip (sfc, NULL, DSFLIP_BLIT));
@@ -167,7 +167,7 @@ static int l_Flip (lua_State* L)
 static int l_GetSubSurface (lua_State* L)
 {
 	// [ sfc | t_rect ]
-	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "directfb.IDirectFBSurface");
+	IDirectFBSurface* sfc = * (IDirectFBSurface**) luaL_checkudata(L, 1, "ldirectfb.IDirectFBSurface");
 	IDirectFBSurface* sub;
 	DFBRectangle rect;
 	table2DFBRectangle(L, &rect);
@@ -199,7 +199,7 @@ static const struct luaL_Reg funcs[] = {
 	{ NULL, NULL }
 };
 
-LUALIB_API int luaopen_directfb_IDirectFBSurface (lua_State* L) {
+LUALIB_API int luaopen_ldirectfb_IDirectFBSurface (lua_State* L) {
 	luaopen_module(L, meths, funcs, l_new);
 	return 1;
 }

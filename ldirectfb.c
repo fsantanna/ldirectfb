@@ -5,7 +5,7 @@
  */
 
 #include <sys/time.h>
-#include "directfb.h"
+#include "ldirectfb.h"
 #include <errno.h>
 
 void l_dump (lua_State* L, char* point)
@@ -380,7 +380,7 @@ int l_init (lua_State* L)
 		lua_pop(L, 1);                            // [ ]
         //DFBCHECK( DirectFBInit(&argc, &oi) );
         DFBCHECK( DirectFBInit(NULL, NULL) );
-		CreateInstance(L, "directfb.IDirectFB");  // [ dfb ]
+		CreateInstance(L, "ldirectfb.IDirectFB");  // [ dfb ]
 		IDirectFB** dfb = (IDirectFB**) lua_touserdata(L, -1);
         //DFBCHECK( (*dfb)->SetCooperativeLevel (*dfb, DFSCL_FULLSCREEN) );
 		lua_pushvalue(L, -1);                     // [ dfb | dfb ]
@@ -429,7 +429,7 @@ LUALIB_API int luaopen_module (lua_State* L, const struct luaL_Reg* meths, const
 	return 1;
 }
 
-static const struct luaL_Reg directfb_funcs[] = {
+static const struct luaL_Reg ldirectfb_funcs[] = {
 	{ "init",         l_init },
 	{ "gettimeofday", l_gettimeofday },
 	{ NULL, NULL }
@@ -684,13 +684,13 @@ static void register_enums (lua_State* L)
 	register_enum(L, "DFBEventClass",              sDFBEventClass);
 }
 
-LUALIB_API int luaopen_directfb (lua_State* L)
+LUALIB_API int luaopen_ldirectfb (lua_State* L)
 {
 	// env = {}
 	lua_newtable(L);                        // [ env ]
 	lua_replace(L, LUA_ENVIRONINDEX);       // [ ]
 
-	luaL_register(L, "directfb", directfb_funcs);
+	luaL_register(L, "ldirectfb", ldirectfb_funcs);
 	register_enums(L);
 	return 1;
 }

@@ -1,12 +1,12 @@
 package.cpath = package.cpath .. ';/linux/Lua/?.so'
-require 'directfb'
+require 'ldirectfb'
 
-local dfb = directfb.init()
-dfb:SetCooperativeLevel(directfb.DFSCL_FULLSCREEN)
+local dfb = ldirectfb.init()
+dfb:SetCooperativeLevel(ldirectfb.DFSCL_FULLSCREEN)
 
 local dsc = {
-	flags = directfb.DSDESC_CAPS;
-	caps  = directfb.DSCAPS_PRIMARY + directfb.DSCAPS_FLIPPING;
+	flags = ldirectfb.DSDESC_CAPS;
+	caps  = ldirectfb.DSCAPS_PRIMARY + ldirectfb.DSCAPS_FLIPPING;
 }
 local sfc = dfb:CreateSurface(dsc)
 local w, h = sfc:GetSize()
